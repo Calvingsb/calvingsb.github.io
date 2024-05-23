@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video en pantalla completa</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Evitar barras de desplazamiento */
+  }
+  
+  video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+</head>
+<body>
+
+<video id="miVideo" autoplay>
+  <source src="/videos/caillou.mp4" type="video/mp4">
+  Tu navegador no soporta la etiqueta de video.
+</video>
+
+<script>
+// Obtener el elemento de video
+var video = document.getElementById("miVideo");
+
+// Función para activar el modo de pantalla completa automáticamente
+function activarPantallaCompleta() {
+  if (video.requestFullscreen) {
+    video.requestFullscreen();
+  } else if (video.mozRequestFullScreen) { // Firefox
+    video.mozRequestFullScreen();
+  } else if (video.webkitRequestFullscreen) { // Chrome, Safari y Opera
+    video.webkitRequestFullscreen();
+  } else if (video.msRequestFullscreen) { // Internet Explorer/Edge
+    video.msRequestFullscreen();
+  }
+}
+
+// Intentar reproducir el video al cargar la página
+document.addEventListener("DOMContentLoaded", function() {
+  video.play().then(() => {
+    // Activar pantalla completa cuando el video comienza a reproducirse
+    activarPantallaCompleta();
+  }).catch(error => {
+    // Mostrar un botón de reproducción si el navegador bloquea la reproducción automática
+    let playButton = document.createElement("button");
+    playButton.innerText = "Reproducir Video";
+    playButton.style.position = "absolute";
+    playButton.style.top = "50%";
+    playButton.style.left = "50%";
+    playButton.style.transform = "translate(-50%, -50%)";
+    playButton.style.padding = "10px 20px";
+    playButton.style.fontSize = "16px";
+    playButton.style.cursor = "pointer";
+    document.body.appendChild(playButton);
+
+    playButton.addEventListener("click", function() {
+      video.play();
+      activarPantallaCompleta();
+      playButton.style.display = "none";
+    });
+  });
+});
+</script>
+
+</body>
+</html>

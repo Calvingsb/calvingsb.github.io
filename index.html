@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contador de tiempo</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex; /* Establecer el cuerpo como contenedor flexible */
+    flex-direction: column; /* Cambiar la dirección de los elementos a columnas */
+    align-items: center; /* Centrar el contenido verticalmente */
+    min-height: 100vh; /* Establecer altura mínima de la ventana */
+    background-color: #000; /* Fondo negro */
+  }
+  
+  #contador {
+    text-align: center;
+    color: #fff; /* Color blanco */
+    font-size: 48px; /* Tamaño de fuente más grande */
+    font-weight: bold; /* Texto en negrita */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fuente */
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo negro con opacidad */
+    padding: 10px 20px; /* Espaciado interno */
+    border-radius: 10px; /* Bordes redondeados */
+    margin-bottom: 20px; /* Espacio desde la parte inferior */
+  }
+  
+  #contenedor-imagenes {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap; /* Permitir que las imágenes se envuelvan en dispositivos móviles */
+    margin-top: 20px; /* Espacio desde la parte superior */
+  }
+  
+  .imagen {
+    width: 48%;
+    height: auto;
+    overflow: hidden;
+    border: 2px solid #000; /* Borde negro */
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease; /* Transición para el efecto de zoom */
+  }
+  
+  .zoom {
+    transform: scale(1.1); /* Aplicar el efecto de zoom */
+  }
+  
+  .imagen img {
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+    margin: auto;
+  }
+
+  /* Reglas de medios para dispositivos móviles */
+  @media (max-width: 768px) {
+    .imagen {
+      width: 100%;
+    }
+    #contador {
+      font-size: 36px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="contador"></div>
+
+<div id="contenedor-imagenes">
+  <div class="imagen" id="imagen1">
+    <img src="/fotos/calvo1.png" alt="Imagen 1">
+  </div>
+
+  <div class="imagen" id="imagen2">
+    <img src="/fotos/calvo2.png" alt="Imagen 2">
+  </div>
+</div>
+
+<script>
+function actualizarContador() {
+  var ahora = new Date().getTime(); // Tiempo actual en milisegundos
+  var proximoViernes = new Date();
+  var diaActual = proximoViernes.getDay(); // Obtener el día actual (0 = domingo, 1 = lunes, ..., 6 = sábado)
+  var diasHastaViernes = (5 - diaActual + 7) % 7; // Calcular los días hasta el próximo viernes
+  
+  if (diasHastaViernes === 0 && proximoViernes.getHours() >= 23) {
+    // Si hoy es viernes y ya pasamos las 11 PM, establecer el próximo viernes
+    diasHastaViernes = 7;
+  }
+  
+  proximoViernes.setDate(proximoViernes.getDate() + diasHastaViernes); // Establecer la fecha al próximo viernes
+  proximoViernes.setHours(23, 0, 0, 0); // Establecer las 11:00 PM
+  
+  var diferencia = proximoViernes - ahora; // Diferencia entre el tiempo actual y el próximo viernes
+  
+  var dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+  var horas = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+  var segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
+  
+  if (diferencia <= 0) {
+    // Redirigir a end.html cuando el contador llegue a cero
+    window.location.href = "end.html";
+  }
+  
+  document.getElementById("contador").innerHTML = "Faltan: " + dias + "d " + horas + "h " + minutos + "m " + segundos + "s ";
+}
+
+// Actualizar el contador cada segundo
+setInterval(actualizarContador, 1000);
+
+// Inicializar el contador
+actualizarContador();
+
+</script>
+
+</body>
+</html>
